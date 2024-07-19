@@ -20,6 +20,10 @@ async def get_reminders(tg_id):
     async with async_session() as session:
         return await session.scalars(select(Reminder).where(Reminder.tg_id == tg_id))
 
+async def get_reminder(id):
+    async with async_session() as session:
+        return await session.scalar(select(Reminder).where(Reminder.id == id))
+
 async def delete_reminder(id):
     async with async_session() as session:
         reminder = await session.scalar(select(Reminder).where(Reminder.id == id))
