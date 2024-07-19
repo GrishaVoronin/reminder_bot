@@ -1,5 +1,5 @@
 greeting_text = 'Привет, я бот для уведомлений!'
 
-greeting_button = 'Создать уведомление'
+create_reminder = 'Создать уведомление'
 
 greeting_placeholder = 'Создайте новое уведомление'
