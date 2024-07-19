@@ -24,7 +24,7 @@ class Reminder(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     tg_id: Mapped[int] = mapped_column(ForeignKey('users.tg_id'))
     description: Mapped[str] = mapped_column(String(50))
-    time: Mapped[datetime] = mapped_column(DateTime)
+    time: Mapped[datetime] = mapped_column()
 
 async def run_db():
     async with engine.begin() as conn:
