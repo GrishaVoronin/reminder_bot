@@ -74,19 +74,26 @@ async def get_remind(message: Message, state: FSMContext):
 @router.message(F.text == tx.reminders_list)
 async def show_reminders(message: Message):
     reminders = await rq.get_reminders(message.from_user.id)
-    for reminder in reminders:
-        await message.answer(f"Напоминание: {reminder.description}\n"
-                             f"Дата: {reminder.time}", reply_markup=kb.empty_kb)
+    if not reminders:
+        await message.answer("Нет уведомлений", reply_markup=kb.default_kb)
+    else:
+        for reminder in reminders:
+            await message.answer(f"Напоминание: {reminder.description}\n"
+                                 f"Дата: {reminder.time}", reply_markup=kb.default_kb)
 
 @router.message(F.text == tx.delete_reminder)
 async def show_reminders(message: Message):
-    await message.answer('Выберите, уведомление для удаления',
-                         reply_markup=await kb.inline_reminders(message.from_user.id))
+    reminders = await rq.get_reminders(message.from_user.id)
+    if not reminders:
+        await message.answer("Нет уведомлений", reply_markup=kb.default_kb)
+    else:
+        await message.answer('Выберите, уведомление для удаления',
+                             reply_markup=await kb.inline_reminders(message.from_user.id))
 
 @router.callback_query(F.data.startswith('reminder'))
 async def delete_reminder(callback: CallbackQuery):
     id = callback.data[8:]
     reminder = await rq.get_reminder(id)
     await callback.message.answer(f'Уведомление: {reminder.description}\n'
-                          f'На дату: {reminder.time} Удалено')
+                          f'На дату: {reminder.time} Удалено', reply_markup=kb.default_kb)
     await rq.delete_reminder(id)

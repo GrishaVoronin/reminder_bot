@@ -18,7 +18,8 @@ async def add_reminder(tg_id, description, time):
 
 async def get_reminders(tg_id):
     async with async_session() as session:
-        return await session.scalars(select(Reminder).where(Reminder.tg_id == tg_id))
+        reminders = await session.scalars(select(Reminder).where(Reminder.tg_id == tg_id))
+        return [reminder for reminder in reminders]
 
 async def get_reminder(id):
     async with async_session() as session:
